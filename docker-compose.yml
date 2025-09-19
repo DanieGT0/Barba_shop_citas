@@ -1,0 +1,108 @@
+# Docker Compose para BarberApp - Stack Completo
+# ===================================================================
+
+services:
+  # =====================================================
+  # PostgreSQL 16 Database
+  # =====================================================
+  postgres-db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    image: barberapp-postgres:16
+    container_name: barberapp-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5433"
+    environment:
+      POSTGRES_DB: barberapp
+      POSTGRES_USER: barberapp_user
+      POSTGRES_PASSWORD: barberapp_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_logs:/var/log/postgresql
+    networks:
+      - barberapp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p 5433 -h localhost -U barberapp_user"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # =====================================================
+  # Spring Boot Backend (Java 17 + Maven)
+  # =====================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: barberapp-backend:latest
+    container_name: barberapp-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-your-google-client-id}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-your-google-client-secret}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-your-github-client-id}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-your-github-client-secret}
+      JAVA_OPTS: "-Xmx512m -Xms256m"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - barberapp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 40s
+
+  # =====================================================
+  # Angular Frontend (Node.js 18 + Angular CLI 17)
+  # =====================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: barberapp-frontend:latest
+    container_name: barberapp-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    environment:
+      API_URL: http://backend:8080/api
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - barberapp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+# =====================================================
+# Volúmenes Persistentes
+# =====================================================
+volumes:
+  postgres_data:
+    driver: local
+    name: barberapp-postgres-data
+  postgres_logs:
+    driver: local
+    name: barberapp-postgres-logs
+
+# =====================================================
+# Red Interna
+# =====================================================
+networks:
+  barberapp-network:
+    driver: bridge
+    name: barberapp-network

@@ -1,0 +1,56 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>content_cut</mat-icon>
+        Bienvenido a BarberApp
+      </mat-card-title>
+      <mat-card-subtitle>
+        Inicia sesión para agendar tu cita
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="login-options">
+        <button
+          mat-raised-button
+          color="primary"
+          class="oauth-button google-button"
+          (click)="loginWithGoogle()"
+          [disabled]="isLoading">
+          <mat-icon>account_circle</mat-icon>
+          <span>Continuar con Google</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+
+        <button
+          mat-raised-button
+          class="oauth-button github-button"
+          (click)="loginWithGitHub()"
+          [disabled]="isLoading">
+          <mat-icon>code</mat-icon>
+          <span>Continuar con GitHub</span>
+        </button>
+
+        <div class="divider">
+          <span>o</span>
+        </div>
+
+        <button
+          mat-stroked-button
+          color="accent"
+          class="guest-button"
+          (click)="continueAsGuest()">
+          <mat-icon>person_outline</mat-icon>
+          <span>Continuar como invitado</span>
+        </button>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions class="login-actions">
+      <p class="disclaimer">
+        Al iniciar sesión, aceptas nuestros términos de servicio y política de privacidad.
+      </p>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,143 @@
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner diameter="50"></mat-spinner>
+  <p>Cargando información del corte...</p>
+</div>
+
+<!-- Error State -->
+<div *ngIf="error && !loading" class="error-container">
+  <mat-icon>error</mat-icon>
+  <h2>{{ error }}</h2>
+  <button mat-raised-button color="primary" (click)="goBack()">
+    Volver a la galería
+  </button>
+</div>
+
+<!-- Corte Detail -->
+<div *ngIf="corte && !loading" class="corte-detail-container">
+  <!-- Header Section -->
+  <div class="detail-header">
+    <div class="container">
+      <div class="header-actions">
+        <button mat-icon-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-icon-button (click)="shareCorte()" class="share-button">
+          <mat-icon>share</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Main Content -->
+    <div class="detail-content">
+      <!-- Image Section -->
+      <div class="image-section">
+        <div class="image-container">
+          <img [src]="corte.urlImagen || '/assets/images/corte-default.jpg'"
+               [alt]="corte.nombre"
+               class="corte-image">
+          <div class="image-overlay">
+            <mat-chip [color]="'primary'" selected class="tipo-badge">
+              {{ getTipoDisplayName(corte.tipo) }}
+            </mat-chip>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Section -->
+      <div class="info-section">
+        <div class="corte-info">
+          <h1 class="corte-title">{{ corte.nombre }}</h1>
+          <p class="corte-description">{{ corte.descripcion || 'Sin descripción disponible' }}</p>
+
+          <div class="corte-specs">
+            <div class="spec-item" *ngIf="corte.precioEstimado">
+              <mat-icon>euro</mat-icon>
+              <div class="spec-content">
+                <span class="spec-label">Precio estimado</span>
+                <span class="spec-value">{{ corte.precioEstimado }}€</span>
+              </div>
+            </div>
+
+            <div class="spec-item" *ngIf="corte.duracionMinutos">
+              <mat-icon>schedule</mat-icon>
+              <div class="spec-content">
+                <span class="spec-label">Duración</span>
+                <span class="spec-value">{{ corte.duracionMinutos }} minutos</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button mat-raised-button color="primary" class="primary-action" (click)="agendarCita()">
+              <mat-icon>event</mat-icon>
+              Agendar cita
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barberos Section -->
+    <div class="barberos-section">
+      <h2>Barberos especializados en este corte</h2>
+
+      <div *ngIf="loadingBarberos" class="loading-barberos">
+        <mat-spinner diameter="30"></mat-spinner>
+        <span>Cargando barberos...</span>
+      </div>
+
+      <div *ngIf="!loadingBarberos && barberos.length > 0" class="barberos-grid">
+        <mat-card *ngFor="let barbero of barberos" class="barbero-card">
+          <div class="barbero-header">
+            <div class="barbero-avatar">
+              <img [src]="barbero.urlFotoPerfil || '/assets/images/avatar-default.jpg'"
+                   [alt]="barbero.usuario.nombre + ' ' + barbero.usuario.apellido"
+                   class="avatar-image">
+            </div>
+            <div class="barbero-info">
+              <h3>{{ barbero.usuario.nombre }} {{ barbero.usuario.apellido }}</h3>
+              <p class="barbero-experience" *ngIf="barbero.anosExperiencia">
+                {{ barbero.anosExperiencia }} años de experiencia
+              </p>
+            </div>
+          </div>
+
+          <mat-card-content>
+            <p class="barbero-description">{{ barbero.descripcion || 'Barbero profesional' }}</p>
+
+            <div class="barbero-details">
+              <div class="detail-row" *ngIf="barbero.precioBase">
+                <mat-icon>euro</mat-icon>
+                <span>Desde {{ barbero.precioBase }}€</span>
+              </div>
+
+              <div class="detail-row" *ngIf="barbero.horarioInicio && barbero.horarioFin">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ barbero.horarioInicio }} - {{ barbero.horarioFin }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="agendarCita(barbero)">
+              <mat-icon>event</mat-icon>
+              Agendar con {{ barbero.usuario.nombre }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <div *ngIf="!loadingBarberos && barberos.length === 0" class="no-barberos">
+        <mat-icon>person_search</mat-icon>
+        <h3>No hay barberos especializados disponibles</h3>
+        <p>Pero puedes agendar una cita con cualquiera de nuestros barberos</p>
+        <button mat-raised-button color="accent" (click)="agendarCita()">
+          Ver todos los barberos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

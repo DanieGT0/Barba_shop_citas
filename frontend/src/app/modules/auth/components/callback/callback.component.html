@@ -1,0 +1,22 @@
+<div class="callback-container">
+  <mat-card class="callback-card">
+    <mat-card-content>
+      <div class="callback-content">
+        <div class="icon-container">
+          <mat-icon *ngIf="isLoading" class="rotating-icon">sync</mat-icon>
+          <mat-icon *ngIf="!isLoading" class="success-icon">check_circle</mat-icon>
+        </div>
+
+        <h2>{{ message }}</h2>
+
+        <div class="spinner-container" *ngIf="isLoading">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+
+        <p class="info-text">
+          Te estamos redirigiendo a la aplicación...
+        </p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

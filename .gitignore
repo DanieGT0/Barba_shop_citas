@@ -1,0 +1,181 @@
+# ==========================================
+# .gitignore para BarberApp (Spring Boot + Angular)
+# ==========================================
+
+# ==========================================
+# ARCHIVOS SENSIBLES - NUNCA SUBIR
+# ==========================================
+.env
+*.env
+!.env.example
+
+# Claves y secretos
+application-secrets.properties
+oauth2-credentials.json
+*.pem
+*.key
+*.p12
+*.jks
+
+# ==========================================
+# BACKEND (Spring Boot / Java)
+# ==========================================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Archivos IDE
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+*.iws
+*.iml
+*.ipr
+
+# ==========================================
+# FRONTEND (Angular / Node.js)
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Archivos de build
+dist/
+dist-ssr/
+*.local
+
+# Cache de Angular
+.angular/
+.sass-cache/
+
+# ==========================================
+# DATABASE
+# ==========================================
+*.sql
+*.db
+*.sqlite
+*.sqlite3
+backups/
+pg_data/
+
+# ==========================================
+# DOCKER
+# ==========================================
+# No ignorar Dockerfiles, pero sí logs
+docker-compose.override.yml
+*.log
+
+# ==========================================
+# SISTEMA OPERATIVO
+# ==========================================
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==========================================
+# IDEs y EDITORES
+# ==========================================
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# IntelliJ IDEA
+.idea/
+*.swp
+*.swo
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# ==========================================
+# LOGS Y TEMPORALES
+# ==========================================
+*.log
+logs/
+temp/
+tmp/
+.tmp/
+.temp/
+
+# ==========================================
+# OTROS
+# ==========================================
+# Archivos de respaldo
+*.orig
+*.rej
+*~
+*.backup
+*.old
+
+# Archivos de compilación
+*.class
+*.war
+*.ear
+*.nar
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output
+
+# Dependency directories que pueden regenerarse
+jspm_packages/

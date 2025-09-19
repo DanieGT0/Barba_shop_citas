@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Script para construir y ejecutar el contenedor Docker de PostgreSQL 16
+
+echo "🐳 Construyendo imagen Docker para PostgreSQL 16 (Puerto 5433)..."
+
+# Variables
+IMAGE_NAME="barberapp-postgres"
+TAG="16"
+CONTAINER_NAME="barberapp-postgres-container"
+POSTGRES_PORT="5433"
+VOLUME_NAME="barberapp-postgres-data"
+LOGS_VOLUME="barberapp-postgres-logs"
+
+# Crear volúmenes si no existen
+echo "📦 Creando volúmenes persistentes..."
+docker volume create $VOLUME_NAME 2>/dev/null || echo "   Volumen $VOLUME_NAME ya existe"
+docker volume create $LOGS_VOLUME 2>/dev/null || echo "   Volumen $LOGS_VOLUME ya existe"
+
+# Construir la imagen
+echo "🔨 Construyendo imagen: $IMAGE_NAME:$TAG"
+docker build -t $IMAGE_NAME:$TAG .
+
+# Verificar si la construcción fue exitosa
+if [ $? -eq 0 ]; then
+    echo "✅ Imagen construida exitosamente!"
+
+    # Mostrar información de la imagen
+    echo "📋 Información de la imagen:"
+    docker images | grep $IMAGE_NAME
+
+    echo ""
+    echo "🚀 Para ejecutar el contenedor con volúmenes persistentes:"
+    echo "docker run -d \\"
+    echo "  --name $CONTAINER_NAME \\"
+    echo "  -p $POSTGRES_PORT:5433 \\"
+    echo "  -v $VOLUME_NAME:/var/lib/postgresql/data \\"
+    echo "  -v $LOGS_VOLUME:/var/log/postgresql \\"
+    echo "  -e POSTGRES_DB=barberapp \\"
+    echo "  -e POSTGRES_USER=barberapp_user \\"
+    echo "  -e POSTGRES_PASSWORD=barberapp_password \\"
+    echo "  $IMAGE_NAME:$TAG"
+
+    echo ""
+    echo "🔗 Conexión a la base de datos:"
+    echo "   Host: localhost"
+    echo "   Puerto: $POSTGRES_PORT"
+    echo "   Base de datos: barberapp"
+    echo "   Usuario: barberapp_user"
+    echo "   Contraseña: barberapp_password"
+
+    echo ""
+    echo "🔍 Comandos útiles:"
+    echo "   Ver logs: docker logs -f $CONTAINER_NAME"
+    echo "   Conectar: docker exec -it $CONTAINER_NAME psql -U barberapp_user -d barberapp -p 5433"
+    echo "   Backup: docker exec $CONTAINER_NAME pg_dump -U barberapp_user -d barberapp > backup.sql"
+    echo "   Detener: docker stop $CONTAINER_NAME"
+    echo "   Eliminar: docker rm $CONTAINER_NAME"
+
+    echo ""
+    echo "📊 Volúmenes creados:"
+    echo "   Datos: $VOLUME_NAME"
+    echo "   Logs: $LOGS_VOLUME"
+    docker volume ls | grep barberapp-postgres
+
+else
+    echo "❌ Error al construir la imagen Docker"
+    exit 1
+fi

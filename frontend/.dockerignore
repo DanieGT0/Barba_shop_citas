@@ -1,0 +1,67 @@
+# Archivos a ignorar durante el build de Docker
+
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de build/dist (se generan en el contenedor)
+dist/
+build/
+
+# Archivos de configuración local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory usado por tools como istanbul
+coverage/
+*.lcov
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Angular specific
+.angular/
+.sass-cache/
+
+# E2E testing
+e2e/
+
+# Documentación
+README.md
+docs/
+
+# Archivos temporales
+*.tmp
+*.temp
